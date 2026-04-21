@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import useSWR from "swr";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -21,7 +22,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { getKegiatanTerbaru, KATEGORI_COLOR } from "@/lib/kegiatan";
+import { KATEGORI_COLOR } from "@/lib/kegiatan";
+import { getKegiatanAction } from "@/actions/kegiatan";
 
 // ─── Reusable animation wrappers ─────────────────────────────────────────────
 
@@ -223,6 +225,86 @@ function StatCard({
         style={{ boxShadow: `inset 0 0 20px ${color}18` }}
       />
     </motion.div>
+  );
+}
+
+// ─── Kegiatan Terbaru Grid (SWR) ──────────────────────────────────────────────
+
+function KegiatanTerbaruGrid() {
+  const { data: semua, isLoading } = useSWR("kegiatan_home", () => getKegiatanAction());
+
+  const terbaru = (semua ?? []).slice(0, 3);
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="bg-card rounded-2xl overflow-hidden border border-border animate-pulse">
+            <div className="h-48 bg-muted" />
+            <div className="p-5 space-y-3">
+              <div className="h-3 bg-muted rounded w-1/3" />
+              <div className="h-4 bg-muted rounded w-3/4" />
+              <div className="h-3 bg-muted rounded w-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!terbaru.length) {
+    return (
+      <div className="text-center py-16 text-muted-foreground">
+        <p className="text-sm">Belum ada kegiatan yang dipublish.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {terbaru.map((item, i) => {
+        const warna = KATEGORI_COLOR[item.kategori as keyof typeof KATEGORI_COLOR] || "#888";
+        return (
+          <FadeUp key={item.id} delay={i * 0.1}>
+            <Link
+              href={`/kegiatan/${item.slug}`}
+              className="group block bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1"
+            >
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src={item.gambar}
+                  alt={item.judul}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute top-3 left-3">
+                  <span
+                    className="px-2.5 py-1 rounded-full text-xs font-bold text-white"
+                    style={{ background: warna }}
+                  >
+                    {item.kategori}
+                  </span>
+                </div>
+              </div>
+              <div className="p-5">
+                <p className="text-xs text-muted-foreground mb-2">
+                  {new Date(item.tanggal).toLocaleDateString("id-ID", {
+                    day: "numeric", month: "long", year: "numeric",
+                  })}
+                </p>
+                <h3 className="font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-200 mb-2">
+                  {item.judul}
+                </h3>
+                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                  {item.ringkasan}
+                </p>
+              </div>
+            </Link>
+          </FadeUp>
+        );
+      })}
+    </div>
   );
 }
 
@@ -631,52 +713,8 @@ export default function Home() {
             </Link>
           </FadeUp>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {getKegiatanTerbaru(3).map((item, i) => {
-              const warna = KATEGORI_COLOR[item.kategori];
-              return (
-                <FadeUp key={item.slug} delay={i * 0.1}>
-                  <Link
-                    href={`/kegiatan/${item.slug}`}
-                    className="group block bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1"
-                  >
-                    <div className="relative h-48 overflow-hidden">
-                      <Image
-                        src={item.gambar}
-                        alt={item.judul}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span
-                          className="px-2.5 py-1 rounded-full text-xs font-bold text-white"
-                          style={{ background: warna }}
-                        >
-                          {item.kategori}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <p className="text-xs text-muted-foreground mb-2">
-                        {new Date(item.tanggal).toLocaleDateString("id-ID", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </p>
-                      <h3 className="font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-200 mb-2">
-                        {item.judul}
-                      </h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                        {item.ringkasan}
-                      </p>
-                    </div>
-                  </Link>
-                </FadeUp>
-              );
-            })}
-          </div>
+          {/* SWR — data langsung dari database */}
+          <KegiatanTerbaruGrid />
         </div>
       </section>
 
