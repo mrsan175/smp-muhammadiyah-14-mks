@@ -29,8 +29,6 @@ import {
   Phone,
   Home,
   Image as ImageIcon,
-  LogIn,
-  ChevronRight,
   Newspaper,
   ClipboardList,
 } from "lucide-react";
@@ -269,9 +267,9 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
 
-            <SheetContent side="right" className="w-[300px] p-0 flex flex-col">
+            <SheetContent side="right" className="min-w-[300px] p-0 pb-8 flex flex-col mt-8">
               {/* Sheet header */}
-              <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
+              <div className="flex items-center gap-4 px-5 py-4 border-b border-border">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
                   <GraduationCap className="h-5 w-5 text-primary-foreground" />
                 </div>
@@ -279,7 +277,7 @@ export function Navbar() {
                   <SheetTitle className="text-sm font-bold text-foreground leading-tight">
                     SMP Muhammadiyah 14
                   </SheetTitle>
-                  <p className="text-xs text-muted-foreground">Menu Navigasi</p>
+                  <p className="text-xs text-muted-foreground">Makassar</p>
                 </div>
               </div>
 
@@ -330,7 +328,7 @@ export function Navbar() {
           </Sheet>
         </div>
       </div>
-    </motion.header>
+    </motion.header >
   );
 }
 
