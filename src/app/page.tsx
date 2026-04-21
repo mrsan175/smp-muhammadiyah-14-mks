@@ -157,24 +157,23 @@ const PROGRAMS = [
   },
 ];
 
-// ─── Floating Particle ────────────────────────────────────────────────────────
+// Nilai random di-generate sekali di luar komponen agar stabil (tidak re-render)
+const PARTICLES = [
+  { width: 6, height: 6, top: "20%", left: "15%", background: "oklch(0.50 0.17 162 / 0.6)", dur: 6, delay: 0 },
+  { width: 4, height: 4, top: "60%", left: "80%", background: "oklch(0.82 0.13 85 / 0.5)", dur: 7, delay: 1 },
+  { width: 8, height: 8, top: "75%", left: "25%", background: "oklch(0.62 0.18 175 / 0.4)", dur: 5, delay: 2 },
+  { width: 5, height: 5, top: "35%", left: "70%", background: "oklch(0.50 0.17 162 / 0.5)", dur: 8, delay: 0.5 },
+  { width: 3, height: 3, top: "80%", left: "60%", background: "oklch(0.82 0.13 85 / 0.6)", dur: 6, delay: 1.5 },
+  { width: 7, height: 7, top: "15%", left: "55%", background: "oklch(0.62 0.18 175 / 0.4)", dur: 9, delay: 3 },
+] as const;
 
-function Particle({ style }: { style: React.CSSProperties }) {
+function Particle({ dur, delay, ...style }: typeof PARTICLES[number]) {
   return (
     <motion.div
       className="absolute rounded-full pointer-events-none"
       style={style}
-      animate={{
-        y: [0, -20, 0],
-        opacity: [0.3, 0.7, 0.3],
-        scale: [1, 1.2, 1],
-      }}
-      transition={{
-        duration: Math.random() * 4 + 4,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: Math.random() * 3,
-      }}
+      animate={{ y: [0, -16, 0], opacity: [0.3, 0.6, 0.3] }}
+      transition={{ duration: dur, repeat: Infinity, ease: "easeInOut", delay }}
     />
   );
 }
@@ -245,12 +244,13 @@ export default function Home() {
         {/* ── Background Image ── */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=60&fm=webp"
             alt="Hero background — suasana sekolah"
             fill
             priority
             className="object-cover object-center"
             sizes="100vw"
+            quality={60}
           />
           {/* Dark + color gradient overlay */}
           <div
@@ -266,36 +266,19 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none z-[1]"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          {/* Large glow orbs */}
-          <motion.div
-            animate={{ scale: [1, 1.15, 1], rotate: [0, 5, 0] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-40 -right-40 h-[700px] w-[700px] rounded-full blur-3xl"
-            style={{ background: "oklch(0.50 0.17 162 / 0.18)" }}
+          {/* Large glow orbs — static, no JS animation for GPU relief */}
+          <div
+            className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full blur-2xl pointer-events-none"
+            style={{ background: "oklch(0.50 0.17 162 / 0.14)" }}
           />
-          <motion.div
-            animate={{ scale: [1.1, 1, 1.1], rotate: [0, -5, 0] }}
-            transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute -bottom-40 -left-40 h-[600px] w-[600px] rounded-full blur-3xl"
-            style={{ background: "oklch(0.82 0.13 85 / 0.12)" }}
-          />
-          <motion.div
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full blur-3xl"
-            style={{ background: "oklch(0.62 0.18 175 / 0.10)" }}
+          <div
+            className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full blur-2xl pointer-events-none"
+            style={{ background: "oklch(0.82 0.13 85 / 0.09)" }}
           />
 
-          {/* Floating particles */}
-          {[
-            { width: 6, height: 6, top: "20%", left: "15%", background: "oklch(0.50 0.17 162 / 0.6)" },
-            { width: 4, height: 4, top: "60%", left: "80%", background: "oklch(0.82 0.13 85 / 0.5)" },
-            { width: 8, height: 8, top: "75%", left: "25%", background: "oklch(0.62 0.18 175 / 0.4)" },
-            { width: 5, height: 5, top: "35%", left: "70%", background: "oklch(0.50 0.17 162 / 0.5)" },
-            { width: 3, height: 3, top: "80%", left: "60%", background: "oklch(0.82 0.13 85 / 0.6)" },
-            { width: 7, height: 7, top: "15%", left: "55%", background: "oklch(0.62 0.18 175 / 0.4)" },
-          ].map((p, i) => (
-            <Particle key={i} style={p} />
+          {/* Floating particles — values are static consts, no Math.random() */}
+          {PARTICLES.map((p, i) => (
+            <Particle key={i} {...p} />
           ))}
 
           {/* Subtle dot pattern — replaces grid lines */}
