@@ -1,5 +1,8 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, GraduationCap, FileText, ClipboardList, TrendingUp } from "lucide-react";
+import { Users, GraduationCap, FileText, ClipboardList } from "lucide-react";
+import { DashboardStatsGrid, type StatItem } from "@/components/dashboard-stats-card";
 import {
   Table,
   TableBody,
@@ -21,32 +24,18 @@ export default function AdminPage() {
             </div>
 
             {/* Statistik */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                    { title: "Total Siswa", value: "350", desc: "+12 bulan ini", icon: Users },
-                    { title: "Total Guru", value: "32", desc: "+2 bulan ini", icon: GraduationCap },
-                    { title: "Pendaftar PPDB", value: "124", desc: "Tahun Ajaran 2026/2027", icon: ClipboardList },
-                    { title: "Kegiatan & Berita", value: "48", desc: "+5 bulan ini", icon: FileText },
-                ].map((stat, i) => (
-                    <Card key={i} className="border-border/50 shadow-sm hover:shadow-md transition-all group">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
-                                {stat.title}
-                            </CardTitle>
-                            <div className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
-                               <stat.icon className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-black">{stat.value}</div>
-                            <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5 font-medium">
-                                {stat.desc.startsWith("+") && <TrendingUp className="h-3 w-3 text-emerald-500" />}
-                                <span className={stat.desc.startsWith("+") ? "text-emerald-600 dark:text-emerald-400" : ""}>{stat.desc}</span>
-                            </p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+            <DashboardStatsGrid columns={4} stats={[
+              { title: "Total Siswa", value: "350", desc: "+12 bulan ini", icon: Users },
+              { title: "Total Guru", value: "32", desc: "+2 bulan ini", icon: GraduationCap },
+              { title: "Pendaftar PPDB", value: "124", desc: "Tahun Ajaran 2026/2027", icon: ClipboardList },
+              { title: "Kegiatan & Berita", value: "48", desc: "+5 bulan ini", icon: FileText },
+            ].map((s) => ({
+              value: s.value,
+              label: s.title,
+              icon: s.icon,
+              trend: s.desc,
+              variant: s.desc.startsWith("+") ? "success" : "default",
+            } as StatItem)) satisfies StatItem[]} />
 
             {/* Tabel & Daftar */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">

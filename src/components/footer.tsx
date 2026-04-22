@@ -69,7 +69,7 @@ const SOCIAL_LINKS = [
 ];
 
 const CONTACT_INFO = [
-  { icon: MapPin, label: "Jl.Daeng Siraju No.58, Kec. Makasar, Kota Makassar, Prov. Sulawesi Selatan" },
+  { icon: MapPin, label: "Jl. Daeng Siraju No.58, Tamparang Keke, Kec. Mamajang, Kota Makassar, Sulawesi Selatan, 90134" },
   { icon: Phone, label: "(0411) 409-6934" },
   { icon: Mail, label: "smpmuhammadiyah14@yahoo.com" },
   { icon: Clock, label: "Senin – Jumat: 07.00 – 15.00 WITA" },
@@ -136,21 +136,24 @@ export function Footer() {
         >
           {/* ── Brand Column ── */}
           <motion.div variants={itemVariants} className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-5 group w-fit">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg transition-transform duration-200 group-hover:scale-105"
+            <div className="flex items-center gap-3 mb-5 w-fit">
+              <Link
+                href="/"
+                className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg transition-transform duration-200 hover:scale-105 shrink-0"
                 style={{
                   background: "linear-gradient(135deg, oklch(0.50 0.17 162), oklch(0.62 0.18 175))",
                   boxShadow: "0 8px 24px oklch(0.50 0.17 162 / 0.35)",
                 }}
               >
                 <GraduationCap className="h-6 w-6 text-white" />
-              </div>
+              </Link>
               <div className="leading-tight">
-                <p className="text-base font-bold text-white">SMP Muhammadiyah 14 Makassar</p>
-                <p className="text-xs text-white/50">Sekolah Menengah Pertama Muhammadiyah</p>
+                <Link href="/" className="block text-base font-bold text-white hover:text-primary transition-colors mb-1">
+                  SMP Muhammadiyah 14
+                </Link>
+                <p className="text-xs text-white/50 pointer-events-none">Makassar</p>
               </div>
-            </Link>
+            </div>
 
             <p className="text-sm text-white/60 leading-relaxed mb-6 max-w-[280px]">
               Mencetak generasi berakhlak mulia, berprestasi, dan berjiwa Islami
@@ -241,11 +244,19 @@ export function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex items-center justify-center text-xs text-white/35"
+          className="flex flex-col md:flex-row items-center justify-between text-xs text-white/40 gap-4"
         >
           <p>
-            &copy; {new Date().getFullYear()} . Seluruh hak cipta dilindungi.
+            &copy; {new Date().getFullYear()} SMP Muhammadiyah 14 Makassar. Hak cipta dilindungi.
           </p>
+          <a
+            href="https://referensi.data.kemendikdasmen.go.id/pendidikan/npsn/40311914"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center group cursor-pointer bg-white/5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/10"
+          >
+            <strong className="font-bold text-white">NPSN: 40311914</strong>
+          </a>
         </motion.div>
       </div>
     </footer>

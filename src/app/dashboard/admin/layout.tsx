@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,7 +14,12 @@ import {
   LogOut,
   LayoutDashboard,
   Menu,
-  FileText
+  FileText,
+  CalendarDays,
+  BookOpen,
+  DoorOpen,
+  Maximize,
+  Minimize,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -35,9 +41,12 @@ const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard/admin" },
   { icon: Users, label: "Data Siswa", href: "/dashboard/admin/siswa" },
   { icon: UserSquare2, label: "Data Guru", href: "/dashboard/admin/guru" },
-  { icon: ClipboardList, label: "Pendaftar PPDB", href: "/dashboard/admin/ppdb" },
+  { icon: DoorOpen, label: "Daftar Kelas", href: "/dashboard/admin/kelas" },
+  { icon: BookOpen, label: "Mata Pelajaran", href: "/dashboard/admin/mata-pelajaran" },
+  { icon: CalendarDays, label: "Jadwal Pelajaran", href: "/dashboard/admin/jadwal" },
   { icon: FileText, label: "Tulisan Kegiatan", href: "/dashboard/admin/kegiatan" },
   { icon: Megaphone, label: "Pengumuman", href: "/dashboard/admin/pengumuman" },
+  { icon: ClipboardList, label: "Pendaftar PPDB", href: "/dashboard/admin/ppdb" },
   { icon: Settings, label: "Pengaturan", href: "/dashboard/admin/pengaturan" },
 ];
 
@@ -80,8 +89,8 @@ function SidebarContent() {
         </nav>
       </ScrollArea>
       <div className="p-4 border-t mt-auto">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => logoutAction()}
           className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50"
         >
@@ -90,6 +99,32 @@ function SidebarContent() {
         </Button>
       </div>
     </div>
+  );
+}
+
+function FullscreenButton() {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggle = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  }, []);
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggle}
+      title={isFullscreen ? "Keluar Layar Penuh" : "Layar Penuh"}
+      className="h-9 w-9 text-muted-foreground hover:text-foreground"
+    >
+      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+    </Button>
   );
 }
 
@@ -103,7 +138,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Topbar */}
-        <header className="flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:px-8 sticky top-0 z-30 shadow-sm shrink-0">
+        <header className="flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4 lg:px-8 sticky top-0 z-30 shadow-sm shrink-0">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -117,11 +152,11 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
             </SheetContent>
           </Sheet>
 
-          <div className="w-full flex-1">
-            {/* Area pencarian atau breadcrumb kosong untuk estetika minimalis */}
-          </div>
+          <FullscreenButton />
 
-          <div className="flex items-center gap-4 border-l pl-4 ml-4">
+          <div className="w-full flex-1" />
+
+          <div className="flex items-center gap-2 border-l pl-4 ml-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-4 cursor-pointer outline-none">
@@ -158,7 +193,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   className="text-red-500 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                   onClick={() => logoutAction()}
                 >

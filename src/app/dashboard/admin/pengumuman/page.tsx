@@ -17,6 +17,7 @@ import {
   deletePengumumanAction, togglePengumumanAction, updatePengumumanAction,
 } from "@/actions/pengumuman";
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import { DashboardStatsGrid } from "@/components/dashboard-stats-card";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -147,20 +148,11 @@ export default function PengumumanPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl border border-border/60 bg-card px-4 py-3 text-center shadow-sm">
-          <p className="text-2xl font-black">{totalCount}</p>
-          <p className="text-xs font-semibold text-muted-foreground mt-0.5">Total</p>
-        </div>
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center shadow-sm">
-          <p className="text-2xl font-black text-emerald-700">{activeCount}</p>
-          <p className="text-xs font-semibold text-emerald-600 mt-0.5">Aktif</p>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center shadow-sm">
-          <p className="text-2xl font-black text-slate-500">{totalCount - activeCount}</p>
-          <p className="text-xs font-semibold text-slate-400 mt-0.5">Nonaktif</p>
-        </div>
-      </div>
+      <DashboardStatsGrid columns={3} stats={[
+        { value: totalCount, label: "Total Pengumuman", icon: Megaphone, variant: "default" },
+        { value: activeCount, label: "Aktif", icon: CheckCircle2, variant: "success" },
+        { value: totalCount - activeCount, label: "Nonaktif", icon: XCircle, variant: "muted" },
+      ]} />
 
       {/* Table */}
       <Card className="shadow-sm border-border/60 p-0">
@@ -292,19 +284,7 @@ export default function PengumumanPage() {
           </SheetHeader>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
-            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
-
-              {!isEditing && (
-                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4">
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-2">Preview di ticker</p>
-                  <div className="flex items-center gap-2 text-sm text-foreground/80">
-                    <Megaphone className="h-4 w-4 text-primary shrink-0" />
-                    <span className="italic opacity-60">Teks pengumuman Anda akan tampil seperti ini...</span>
-                  </div>
-                </div>
-              )}
-
-              <Separator />
+            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
 
               <div className="space-y-1.5">
                 <Label htmlFor="teks" className="flex items-center gap-2 text-sm font-semibold">
@@ -348,10 +328,7 @@ export default function PengumumanPage() {
               )}
             </div>
 
-            <div className="shrink-0 border-t px-6 py-4 flex items-center justify-between bg-muted/30">
-              <p className="text-xs text-muted-foreground">
-                {isEditing ? "Perubahan langsung diterapkan" : "Aktif otomatis setelah disimpan"}
-              </p>
+            <div className="shrink-0 border-t px-6 py-4 flex items-center justify-end bg-muted/30">
               <div className="flex items-center gap-2">
                 <Button type="button" variant="outline" onClick={() => { setFormOpen(false); setSelectedItem(null); }} disabled={isSubmitting}>
                   Batal

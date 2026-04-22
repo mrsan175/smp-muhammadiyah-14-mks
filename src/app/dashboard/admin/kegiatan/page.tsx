@@ -9,6 +9,7 @@ import {
   Plus, Trash2, Loader2, FileText,
   CalendarDays, Tag, AlignLeft, BookOpen,
   ImageIcon, MoreHorizontal, Pencil,
+  BookOpenCheck, Dumbbell, HeartHandshake, Moon, Trophy,
 } from "lucide-react";
 import Image from "next/image";
 import { useAdminUIStore } from "@/lib/store";
@@ -34,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ImageUpload } from "@/components/image-upload";
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import { DashboardStatsGrid, type StatItem } from "@/components/dashboard-stats-card";
 import { toast } from "sonner";
 
 const KATEGORI_COLORS: Record<string, string> = {
@@ -169,17 +171,19 @@ export default function KegiatanAdminPage() {
       </div>
 
       {/* Stat summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-        {["Akademik", "Ekskul", "Sosial", "Agama", "Prestasi"].map((kat) => {
-          const count = kegiatan?.filter((k) => k.kategori === kat).length ?? 0;
-          return (
-            <div key={kat} className={`rounded-xl border px-3 py-2.5 text-center ${KATEGORI_COLORS[kat]}`}>
-              <p className="text-xl font-black">{count}</p>
-              <p className="text-xs font-semibold mt-0.5">{kat}</p>
-            </div>
-          );
-        })}
-      </div>
+      <DashboardStatsGrid columns={4} stats={(function () {
+        const all = kegiatan?.length ?? 0;
+        const akademik = kegiatan?.filter((k) => k.kategori === "Akademik").length ?? 0;
+        const ekskul = kegiatan?.filter((k) => k.kategori === "Ekskul").length ?? 0;
+        const agama = kegiatan?.filter((k) => k.kategori === "Agama").length ?? 0;
+        const lainnya = (kegiatan?.filter((k) => !["Akademik", "Ekskul", "Agama"].includes(k.kategori)).length ?? 0);
+        return [
+          { value: all, label: "Total Kegiatan", icon: FileText, variant: "default" },
+          { value: akademik, label: "Akademik", icon: BookOpenCheck, variant: "success" },
+          { value: ekskul, label: "Ekskul", icon: Dumbbell, variant: "warning" },
+          { value: agama + lainnya, label: "Agama & Lainnya", icon: Moon, variant: "muted" },
+        ] as StatItem[];
+      })()} />
 
       {/* Table */}
       <Card className="shadow-sm border-border/60 p-0">

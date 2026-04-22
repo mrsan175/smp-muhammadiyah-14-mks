@@ -36,8 +36,7 @@ export default function KontakPage() {
                   <Mail className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="font-bold text-foreground mb-1">Email Resmi</h3>
-                <p className="text-sm text-muted-foreground">info@smpm14mks.sch.id</p>
-                <p className="text-sm text-muted-foreground">humas@smpm14mks.sch.id</p>
+                <p className="text-sm text-muted-foreground">smpmuhammadiyah14@yahoo.com</p>
               </div>
               <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 sm:col-span-2 flex items-start gap-4">
                 <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
@@ -57,7 +56,7 @@ export default function KontakPage() {
               <div>
                 <h3 className="font-bold text-foreground mb-1">Alamat Lengkap</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Jl. Daeng Siraju No.58, Tamparang Keke, Kec. Mamajang, Kota Makassar, Sulawesi Selatan 90134
+                  Jl. Daeng Siraju No.58, Tamparang Keke, Kec. Mamajang, Kota Makassar, Sulawesi Selatan, 90134
                 </p>
               </div>
             </div>

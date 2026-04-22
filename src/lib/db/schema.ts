@@ -1,4 +1,4 @@
-import { timestamp, pgTable, text, boolean, pgEnum } from "drizzle-orm/pg-core"
+import { timestamp, pgTable, text, boolean, pgEnum, integer } from "drizzle-orm/pg-core"
 
 
 export const roleEnum = pgEnum("role", ["user", "teacher", "admin"])
@@ -67,6 +67,59 @@ export const pengumuman = pgTable("pengumuman", {
     href: text("href").notNull(),
     tanggal: timestamp("tanggal", { mode: "date" }).defaultNow(),
     isActive: boolean("isActive").default(true),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
+})
+
+// ─── Guru & Staf ─────────────────────────────────────────────────────────────
+
+export const guru = pgTable("guru", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    nama: text("nama").notNull(),
+    nip: text("nip"),
+    jabatan: text("jabatan"),       // e.g. "Guru Matematika", "Wali Kelas VII-A"
+    foto: text("foto"),
+    isActive: boolean("is_active").default(true),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
+})
+
+// ─── Mata Pelajaran ───────────────────────────────────────────────────────────
+
+export const mataPelajaran = pgTable("mata_pelajaran", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    nama: text("nama").notNull(),          // e.g. "Matematika"
+    kode: text("kode"),                    // e.g. "MTK" (opsional)
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
+})
+
+// ─── Kelas ───────────────────────────────────────────────────────────────────
+
+export const kelas = pgTable("kelas", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    nama: text("nama").notNull().unique(), // e.g. "VII-A", "VIII-B", "IX-C"
+    tingkat: text("tingkat"),              // e.g. "VII", "VIII", "IX"
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
+})
+
+// ─── Jadwal Pelajaran ─────────────────────────────────────────────────────────
+// Satu baris = satu slot pelajaran (kelas + hari + jam + mapel)
+
+export const hariEnum = pgEnum("hari", ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"])
+
+export const jadwal = pgTable("jadwal", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    kelas: text("kelas").notNull(),
+    hari: hariEnum("hari").notNull(),
+    jamMulai: text("jam_mulai").notNull(),
+    jamSelesai: text("jam_selesai").notNull(),
+    urutan: integer("urutan").notNull(),
+    mapelId: text("mapel_id").references(() => mataPelajaran.id, { onDelete: "set null" }),
+    guruId: text("guru_id").references(() => guru.id, { onDelete: "set null" }),
+    isIstirahat: boolean("is_istirahat").default(false),
+    labelIstirahat: text("label_istirahat"),  // custom label untuk baris istirahat
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
 })

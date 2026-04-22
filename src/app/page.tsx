@@ -676,7 +676,7 @@ export default function Home() {
           <FadeUp delay={0.4} className="text-center mt-12">
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
               <Link
-                href="/akademik"
+                href="/akademik/ekskul"
                 className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm text-white transition-all"
                 style={{
                   background: "linear-gradient(135deg, oklch(0.50 0.17 162), oklch(0.62 0.18 175))",
@@ -817,7 +817,7 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/ppdb"
-                className="inline-flex items-center gap-2 px-10 py-4 rounded-xl font-bold text-white"
+                className="inline-flex items-center justify-center w-full gap-2 px-3 md:px-8 py-3 rounded-xl font-bold text-white text-sm"
                 style={{
                   background: "linear-gradient(135deg, oklch(0.50 0.17 162), oklch(0.62 0.18 175))",
                   boxShadow: "0 16px 40px oklch(0.50 0.17 162 / 0.30)",
@@ -830,7 +830,7 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/kontak"
-                className="inline-flex items-center gap-2 px-10 py-4 rounded-xl font-semibold text-foreground hover:text-primary transition-colors"
+                className="inline-flex items-center justify-center w-full gap-2 px-3 md:px-8 py-3 rounded-xl font-semibold text-foreground hover:text-primary transition-colors text-sm"
                 style={{
                   background: "oklch(0 0 0 / 0.04)",
                   border: "1px solid oklch(0 0 0 / 0.12)",
