@@ -46,7 +46,7 @@ export default function LoginPage() {
                     <div className="text-center mb-8">
                         <h1 className="text-2xl font-bold text-foreground mb-2">Selamat Datang</h1>
                         <p className="text-sm text-muted-foreground">
-                            Masuk ke dashboard panel admin/guru SMP Muhammadiyah 14 Makassar
+                            Masuk ke dashboard panel admin/guru
                         </p>
                     </div>
 
@@ -104,7 +104,7 @@ export default function LoginPage() {
                     </form>
 
                     <div className="mt-8 text-center text-sm text-muted-foreground">
-                        <p>Hanya untuk admin & staf. Jika Anda siswa, silahkan kembali ke <Link href="/" className="text-primary hover:underline font-medium">Beranda</Link>.</p>
+                        <p>Hanya untuk admin & staf.</p>
                     </div>
                 </div>
             </motion.div>

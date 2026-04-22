@@ -84,13 +84,13 @@ export function ScrollToTop() {
 
                     {/* Center button face */}
                     <span
-                        className="relative flex h-8 w-8 items-center justify-center rounded-full"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full"
                         style={{
                             background:
                                 "linear-gradient(135deg, oklch(0.50 0.17 162), oklch(0.62 0.18 175))",
                         }}
                     >
-                        <ArrowUp className="h-4 w-4 text-white" strokeWidth={2.5} />
+                        <ArrowUp className="h-5 w-5 text-white" strokeWidth={2.5} />
                     </span>
                 </motion.button>
             )}

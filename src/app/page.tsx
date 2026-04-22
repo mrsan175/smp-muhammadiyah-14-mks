@@ -345,7 +345,7 @@ export default function Home() {
         </div>
         {/* Parallax bg layer */}
         <motion.div
-          className="absolute inset-0 pointer-events-none z-[1]"
+          className="absolute inset-0 pointer-events-none z-1"
           style={{ y: heroY, opacity: heroOpacity }}
         >
           {/* Large glow orbs — static, no JS animation for GPU relief */}
@@ -462,12 +462,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.75 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6"
+            className="flex items-center justify-center gap-4 mb-6"
           >
             <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/ppdb"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm text-white transition-all"
+                className="inline-flex items-center gap-2 px-3 md:px-8 py-3 rounded-xl font-bold text-sm text-white transition-all"
                 style={{
                   background: "linear-gradient(135deg, oklch(0.50 0.17 162), oklch(0.62 0.18 175))",
                   boxShadow: "0 12px 32px oklch(0.50 0.17 162 / 0.40)",
@@ -480,7 +480,7 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/profil"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-white/80 transition-all hover:text-white"
+                className="inline-flex items-center gap-2 px-3 md:px-8 py-3 rounded-xl font-semibold text-sm text-white/80 transition-all hover:text-white"
                 style={{
                   background: "oklch(1 0 0 / 0.07)",
                   border: "1px solid oklch(1 0 0 / 0.18)",

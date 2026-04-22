@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import useSWR from "swr";
+import { getPengumumanAction } from "@/actions/pengumuman";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -56,6 +58,7 @@ const NAV_LINKS = [
       { label: "Kurikulum", href: "/akademik/kurikulum", desc: "Struktur program belajar" },
       { label: "Mata Pelajaran", href: "/akademik/mata-pelajaran", desc: "Daftar bidang studi" },
       { label: "Jadwal", href: "/akademik/jadwal", desc: "Kalender dan jadwal belajar" },
+      { label: "Ekstrakurikuler", href: "/akademik/ekskul", desc: "Minat, bakat, dan ekskul" },
     ],
   },
   { label: "Prestasi", href: "/prestasi", icon: Award },
@@ -83,6 +86,18 @@ function HoverDropdown({
   scrolled: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 150);
+  };
 
   const linkClass = cn(
     "relative flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 outline-none focus-visible:ring-0",
@@ -94,8 +109,8 @@ function HoverDropdown({
   return (
     <div
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
         <DropdownMenuTrigger asChild>
@@ -112,8 +127,8 @@ function HoverDropdown({
         <DropdownMenuContent
           align="center"
           sideOffset={8}
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           className="w-64 rounded-xl border border-border bg-card p-1.5 shadow-xl animate-in fade-in-0 zoom-in-95"
         >
           {item.children?.map((child) => (
@@ -148,6 +163,10 @@ export function Navbar() {
 
   // Hanya halaman beranda yang punya hero gelap — halaman lain selalu pakai style scrolled
   const isHomePage = pathname === "/";
+
+  // Check announcement state to adjust top margin
+  const { data: dbPengumuman } = useSWR("pengumuman_public", () => getPengumumanAction());
+  const hasAnnouncement = (dbPengumuman || []).filter((p) => p.isActive).length > 0;
 
   React.useEffect(() => {
     if (!isHomePage) {
@@ -186,7 +205,8 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
       className={cn(
-        "fixed top-8 left-0 right-0 z-50 transition-all duration-300",
+        "fixed left-0 right-0 z-50 transition-all duration-300",
+        hasAnnouncement ? "top-8" : "top-0",
         scrolled
           ? "bg-card/95 backdrop-blur-xl shadow-sm"
           : "bg-transparent"
@@ -375,22 +395,24 @@ function MobileAccordion({
             transition={{ duration: 0.22, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="ml-4 pl-4 border-l-2 border-primary/20 mt-1 mb-1 space-y-0.5">
+            <div className="ml-5 mt-1 mb-2 space-y-1 relative pr-2">
+              <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full bg-linear-to-b from-primary/30 via-primary/10 to-transparent" />
               {items.map((child) => (
                 <Link
                   key={child.href}
                   href={child.href}
                   onClick={onClose}
-                  className="flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm text-foreground/70 hover:text-foreground hover:bg-muted transition-colors"
+                  className="flex flex-col gap-1 pl-6 pr-3 py-3 rounded-xl transition-all relative overflow-hidden bg-transparent hover:bg-primary/5 active:bg-primary/10 group"
                 >
-                  <span className="font-medium">{child.label}</span>
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-0.5 rounded-r-full bg-primary/20 group-hover:bg-primary/60 group-active:w-5 transition-all" />
+                  <span className="font-bold text-sm text-foreground/80 group-hover:text-primary transition-colors">{child.label}</span>
                   {child.desc && (
-                    <span className="text-xs text-muted-foreground">{child.desc}</span>
+                    <span className="text-[11px] text-muted-foreground leading-tight line-clamp-1">{child.desc}</span>
                   )}
                 </Link>
               ))}
             </div>
-            <Separator className="my-1 mx-3" />
+            <Separator className="my-1.5 mx-3 opacity-50" />
           </motion.div>
         )}
       </AnimatePresence>
